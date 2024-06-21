@@ -1,0 +1,48 @@
+parameters:
+  - name: deployenvironmentname
+    default: DEVINT
+  - name: DCountenv
+    default: DEV
+  - name: TrackName
+    default: Guest
+  - name: TemplateName
+    default: Guest
+  - name: checkoutreponame
+    default: Reponame
+  - name: ValidationType
+    default: CAST
+  - name: packagesPath
+    default: Guest
+  - name: folderName
+    default: Guest
+  - name: processType
+    default: windowslegacy
+name: $(date:yyyyMMdd)$(rev:.r)
+pr: none
+resources:
+  repositories:
+    - repository: templates
+      type: githubenterprise
+      name: Digital-Platform-IT-Build/OneC_2932_CoreTemplate
+      endpoint: GHA-HR Services IT Systems-SC-3677-Production Orchestrator
+    - repository: Reponame
+      type: githubenterprise
+      ref: $(Build.SourceBranchName)
+      name: HR-Services-IT-Systems/OneC_3677_Unassigned_Mitigation_Phase1
+      endpoint: GHA-HR Services IT Systems-SC-3677-Production Orchestrator
+stages:
+  - template: Uipath core template/Stagesuipath.yml@templates
+    parameters:
+      TrackName: 3677-Unassigned-Mitigation-Phase1
+      deployenvironmentname: DEVINT
+      checkoutreponame: Reponame
+      DCountenv: DEV
+      TemplateName: Uipath-Deploy-Logic.yml
+      ValidationType: CAST
+      folderName: Migrated Default/Unassigned Mitigation
+      ISKTLO: false
+      KTLOChildName: $(System.TeamProject)
+      projectJsonPath: project.json
+      packagesPath: \\CTSINAZSIDOPBS1\DevopsFileShare\Digital-Platform-IT-Build\$(Build.SourceBranchName)\$(Build.DefinitionName)\$(Build.BuildNumber)\
+      processType: windows
+      cliVersion: WIN_23.6.8581.19168
